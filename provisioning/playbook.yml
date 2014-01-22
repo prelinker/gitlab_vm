@@ -91,13 +91,13 @@
       git: repo=https://gitlab.com/gitlab-org/gitlab-ci.git dest=/home/gitlab_ci/gitlab_ci version=4-1-stable
     
     - name: copy application conf
-      copy: src=sources/gitlab_config/application.yml dest=/home/gitlab_ci/gitlab_ci/config/application.yml
+      copy: src=sources/gitlab_ci_config/application.yml dest=/home/gitlab_ci/gitlab_ci/config/application.yml
     
     - name: copy puma
-      copy: src=sources/gitlab_config/puma.rb dest=/home/gitlab_ci/gitlab_ci/config/puma.rb
+      copy: src=sources/gitlab_ci_config/puma.rb dest=/home/gitlab_ci/gitlab_ci/config/puma.rb
     
     - name: copy database conf
-      copy: src=sources/gitlab_config/database.yml dest=/home/gitlab_ci/gitlab_ci/config/database.yml
+      copy: src=sources/gitlab_ci_config/database.yml dest=/home/gitlab_ci/gitlab_ci/config/database.yml
     
     - name: create socket folder
       file: path=/home/gitlab_ci/gitlab_ci/tmp/sockets/ owner=gitlab_ci state=directory mode=0755
@@ -121,7 +121,7 @@
       sudo: yes
     
     - name: copy init
-      copy: src=sources/gitlab_config/gitlab_ci dest=/etc/init.d/gitlab_ci
+      copy: src=sources/gitlab_ci_config/gitlab_ci dest=/etc/init.d/gitlab_ci
       
     - name: set permissions
       file: path=/etc/init.d/gitlab_ci mode=0755
