@@ -3,7 +3,7 @@
 # Start Puma with next command:
 # RAILS_ENV=production bundle exec puma -e production -C ./config/puma.rb
 
-application_path = '/home/gitlab_ci/gitlab-ci'
+application_path = '/home/gitlab_ci/gitlab_ci'
 
 # The directory to operate out of.
 #

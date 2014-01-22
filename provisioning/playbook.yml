@@ -121,7 +121,7 @@
       sudo: yes
     
     - name: copy init
-      action: command sudo cp /home/gitlab_ci/gitlab_ci/lib/support/init.d/gitlab_ci /etc/init.d/gitlab_ci
+      copy: src=sources/gitlab_config/gitlab_ci dest=/etc/init.d/gitlab_ci
       
     - name: set permissions
       file: path=/etc/init.d/gitlab_ci mode=0755
