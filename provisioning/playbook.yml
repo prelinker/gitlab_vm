@@ -5,132 +5,132 @@
 
     - action: shell whoami
       register: whoami
-    # 
-    # - name: update apt cache
-    #   apt: update_cache=yes cache_valid_time=3600
-    #   sudo: yes
-    # 
-    # - name: upgrade the distro
-    #   apt: upgrade=yes
-    #   sudo: yes
-    # 
-    # - name: install packages
-    #   apt: pkg={{ item }} state=latest
-    #   sudo: yes
-    #   with_items:
-    #     - vim
-    #     - nginx
-    #     - curl
-    #     - gnupg
-    #     - rsync
-    #     - wget
-    #     - gcc
-    #     - checkinstall
-    #     - libxml2-dev
-    #     - libxslt1-dev
-    #     - libcurl4-openssl-dev
-    #     - libreadline6-dev
-    #     - libc6-dev
-    #     - libssl-dev
-    #     - libmysql++-dev
-    #     - make
-    #     - build-essential
-    #     - zlib1g-dev
-    #     - openssh-server
-    #     - git-core
-    #     - libyaml-dev
-    #     - postfix
-    #     - libpq-dev
-    #     - libicu-dev
-    #     - redis-server
-    #     - mysql-server
-    #     - mysql-client
-    #     - libmysqlclient-dev
-    #     - python-mysqldb
-    # 
-    #   notify:
-    #     - restart nginx
-    # 
-    # - name: forbid SSH root login
-    #   sudo: yes
-    #   lineinfile: destfile=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
-    #   notify:
-    #     - restart ssh
-    # 
-    # - name: download ruby
-    #   action: command {{ item }} chdir=/root/
-    #   sudo: yes
-    #   with_items:
-    #     - wget http://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p353.tar.bz2
-    #     - tar xf ruby-2.0.0-p353.tar.bz2
-    #     - rm ruby-2.0.0-p353.tar.bz2
-    # 
-    # - name: install ruby
-    #   action: command {{ item }} chdir=/root/ruby-2.0.0-p353
-    #   sudo: yes
-    #   with_items:
-    #     - ./configure --disable-install-rdoc
-    #     - make
-    #     - make install
-    #     - rm -rf ../ruby-2.0.0-p353
-    # 
-    # - name: install bundler
-    #   gem: name=bundler state=present
-    #   sudo: yes
-    #   
-    # - name: add user gitlab ci
-    #   user: name=gitlab_ci
-    #   
-    # - name: add gitlab ci database
-    #   mysql_db: name=gitlab_ci_production state=present encoding=utf8 collation=utf8_unicode_ci
-    #   
-    # - name: add gitlab ci mysql user
-    #   mysql_user: name=gitlab_ci host=localhost password=$password priv=gitlab_ci_production.*:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,INDEX,ALTER state=present
+    
+    - name: update apt cache
+      apt: update_cache=yes cache_valid_time=3600
+      sudo: yes
+    
+    - name: upgrade the distro
+      apt: upgrade=yes
+      sudo: yes
+    
+    - name: install packages
+      apt: pkg={{ item }} state=latest
+      sudo: yes
+      with_items:
+        - vim
+        - nginx
+        - curl
+        - gnupg
+        - rsync
+        - wget
+        - gcc
+        - checkinstall
+        - libxml2-dev
+        - libxslt1-dev
+        - libcurl4-openssl-dev
+        - libreadline6-dev
+        - libc6-dev
+        - libssl-dev
+        - libmysql++-dev
+        - make
+        - build-essential
+        - zlib1g-dev
+        - openssh-server
+        - git-core
+        - libyaml-dev
+        - postfix
+        - libpq-dev
+        - libicu-dev
+        - redis-server
+        - mysql-server
+        - mysql-client
+        - libmysqlclient-dev
+        - python-mysqldb
+    
+      notify:
+        - restart nginx
+    
+    - name: forbid SSH root login
+      sudo: yes
+      lineinfile: destfile=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+      notify:
+        - restart ssh
+    
+    - name: download ruby
+      action: command {{ item }} chdir=/root/
+      sudo: yes
+      with_items:
+        - wget http://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p353.tar.bz2
+        - tar xf ruby-2.0.0-p353.tar.bz2
+        - rm ruby-2.0.0-p353.tar.bz2
+    
+    - name: install ruby
+      action: command {{ item }} chdir=/root/ruby-2.0.0-p353
+      sudo: yes
+      with_items:
+        - ./configure --disable-install-rdoc
+        - make
+        - make install
+        - rm -rf ../ruby-2.0.0-p353
+    
+    - name: install bundler
+      gem: name=bundler state=present
+      sudo: yes
       
-    # - name: checkout gitlab ci
-    #   git: repo=https://gitlab.com/gitlab-org/gitlab-ci.git dest=/home/gitlab_ci/gitlab_ci version=4-1-stable
-    # 
-    # - name: copy application conf
-    #   copy: src=sources/gitlab_config/application.yml dest=/home/gitlab_ci/gitlab_ci/config/application.yml
-    # 
-    # - name: copy puma
-    #   copy: src=sources/gitlab_config/puma.rb dest=/home/gitlab_ci/gitlab_ci/config/puma.rb
-    # 
-    # - name: copy database conf
-    #   copy: src=sources/gitlab_config/database.yml dest=/home/gitlab_ci/gitlab_ci/config/database.yml
-    # 
-    # - name: create socket folder
-    #   file: path=/home/gitlab_ci/gitlab_ci/tmp/sockets/ owner=gitlab_ci state=directory mode=0755
-    # 
-    # - name: create pids folder
-    #   file: path=/home/gitlab_ci/gitlab_ci/tmp/pids/ owner=gitlab_ci state=directory mode=0755
-    #   
-    # - name: set permissions
-    #   file: path=/home/gitlab_ci/gitlab_ci owner=gitlab_ci group=gitlab_ci recurse=yes
-    # 
-    # - name: install gems
-    #   action: command sudo -u gitlab_ci -H bundle install --without development testostgres --deployment chdir=/home/gitlab_ci/gitlab_ci
-    #   sudo: yes
-    # 
-    # - name: setup table
-    #   action: command sudo -u gitlab_ci -H bundle exec rake db:setup RAILS_ENV=production chdir=/home/gitlab_ci/gitlab_ci
-    #   sudo: yes
-    # 
-    # - name: setup schedules
-    #   action: command sudo -u gitlab_ci -H bundle exec whenever -w RAILS_ENV=production chdir=/home/gitlab_ci/gitlab_ci
-    #   sudo: yes
-    # 
-    # - name: copy init
-    #   action: command sudo cp /home/gitlab_ci/gitlab_ci/lib/support/init.d/gitlab_ci /etc/init.d/gitlab_ci
-    #   
-    # - name: set permissions
-    #   file: path=/etc/init.d/gitlab_ci mode=0755
-    # 
-    # - name: start gitlab_ci on boot
-    #   action: command {{ item }} chdir=/etc/init.d/
-    #   with_items:
-    #     - update-rc.d gitlab_ci defaults 21
-    #   notify: restart gitlab_ci
+    - name: add user gitlab ci
+      user: name=gitlab_ci
+      
+    - name: add gitlab ci database
+      mysql_db: name=gitlab_ci_production state=present encoding=utf8 collation=utf8_unicode_ci
+      
+    - name: add gitlab ci mysql user
+      mysql_user: name=gitlab_ci host=localhost password=$password priv=gitlab_ci_production.*:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,INDEX,ALTER state=present
+      
+    - name: checkout gitlab ci
+      git: repo=https://gitlab.com/gitlab-org/gitlab-ci.git dest=/home/gitlab_ci/gitlab_ci version=4-1-stable
+    
+    - name: copy application conf
+      copy: src=sources/gitlab_config/application.yml dest=/home/gitlab_ci/gitlab_ci/config/application.yml
+    
+    - name: copy puma
+      copy: src=sources/gitlab_config/puma.rb dest=/home/gitlab_ci/gitlab_ci/config/puma.rb
+    
+    - name: copy database conf
+      copy: src=sources/gitlab_config/database.yml dest=/home/gitlab_ci/gitlab_ci/config/database.yml
+    
+    - name: create socket folder
+      file: path=/home/gitlab_ci/gitlab_ci/tmp/sockets/ owner=gitlab_ci state=directory mode=0755
+    
+    - name: create pids folder
+      file: path=/home/gitlab_ci/gitlab_ci/tmp/pids/ owner=gitlab_ci state=directory mode=0755
+      
+    - name: set permissions
+      file: path=/home/gitlab_ci/gitlab_ci owner=gitlab_ci group=gitlab_ci recurse=yes
+    
+    - name: install gems
+      action: command sudo -u gitlab_ci -H bundle install --without development testostgres --deployment chdir=/home/gitlab_ci/gitlab_ci
+      sudo: yes
+    
+    - name: setup table
+      action: command sudo -u gitlab_ci -H bundle exec rake db:setup RAILS_ENV=production chdir=/home/gitlab_ci/gitlab_ci
+      sudo: yes
+    
+    - name: setup schedules
+      action: command sudo -u gitlab_ci -H bundle exec whenever -w RAILS_ENV=production chdir=/home/gitlab_ci/gitlab_ci
+      sudo: yes
+    
+    - name: copy init
+      action: command sudo cp /home/gitlab_ci/gitlab_ci/lib/support/init.d/gitlab_ci /etc/init.d/gitlab_ci
+      
+    - name: set permissions
+      file: path=/etc/init.d/gitlab_ci mode=0755
+    
+    - name: start gitlab_ci on boot
+      action: command {{ item }} chdir=/etc/init.d/
+      with_items:
+        - update-rc.d gitlab_ci defaults 21
+      notify: restart gitlab_ci
 
     - name: copy nginx default conf
       copy: src=sources/nginx_config/nginx.conf dest=/etc/nginx/nginx.conf
