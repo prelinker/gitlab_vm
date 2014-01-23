@@ -1,0 +1,15 @@
+---
+- name: Install GitLab CI
+  hosts: gitlab-server
+  accelerate: true
+  vars_files:
+    - roles/gitlab_ci/vars/main.yml
+
+  roles:
+    # - common
+    # - ruby
+    # - git
+    # - redis
+    # - mysql
+    # - gitlab_ci
+    - nginx

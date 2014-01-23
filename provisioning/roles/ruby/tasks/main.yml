@@ -1,0 +1,18 @@
+---
+- name: download ruby {{ ruby_version }} archive
+  action: command {{ item }} chdir=/tmp/
+  with_items:
+    - wget {{ ruby_archive }}
+    - tar xf ruby-{{ ruby_version }}.tar.bz2
+    - rm ruby-{{ ruby_version }}.tar.bz2
+
+- name: install ruby {{ ruby_version }}
+  action: command {{ item }} chdir=/tmp/ruby-{{ ruby_version }}
+  with_items:
+    - ./configure {{ configure_options }}
+    - make
+    - make install
+    - rm -rf ../ruby-{{ ruby_version }}
+
+- name: install bundler
+  gem: name=bundler state=present

@@ -26,8 +26,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
 
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provisioning/playbook.yml"
-    ansible.inventory_path = "provisioning/hosts-vagrant"
+    ansible.playbook = "provisioning/ansible-playbook.yml"
+    ansible.inventory_path = "provisioning/hosts"
     ansible.host_key_checking = false
     ansible.extra_vars = { ntp_server: "pool.ntp.org", nginx: { port: 8008, workers: 4 } }
     ansible.sudo = true

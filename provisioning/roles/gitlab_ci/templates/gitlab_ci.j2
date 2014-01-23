@@ -14,8 +14,8 @@
 # Description:       GitLab CI
 ### END INIT INFO
 
-APP_USER="gitlab_ci"
-APP_ROOT="/home/$APP_USER/gitlab_ci"
+APP_USER="{{ gitlab_ci_user }}"
+APP_ROOT="{{ gitlab_ci_path }}"
 DAEMON_OPTS="-C $APP_ROOT/config/puma.rb -e production"
 SOCKET_PATH="$APP_ROOT/tmp/sockets"
 SOCKET_FILE="$SOCKET_PATH/gitlab-ci.socket"
