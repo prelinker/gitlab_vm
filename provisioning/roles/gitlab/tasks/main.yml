@@ -40,13 +40,10 @@
   command: gem install bundler
 
 - name: bundle install gitlab gems
-  command: bundle install --deployment --without development test postgres aws chdir={{ gitlab_path }}
+  shell: sudo -u {{ gitlab_user }} -H bundle install --deployment --without development test postgres aws chdir={{ gitlab_path }}
 
-- name: setup gitlab ci tables
-  shell: /usr/bin/yes "yes" | bundle exec rake gitlab:setup RAILS_ENV=production chdir={{ gitlab_path }}
-
-- name: set permissions
-  file: path={{ gitlab_path }} owner={{ gitlab_user }} group={{ gitlab_user }} recurse=yes
+- name: setup gitlab tables
+  shell: sudo -u {{ gitlab_user }} -H bundle exec rake gitlab:setup RAILS_ENV=production chdir={{ gitlab_path }}
 
 - name: copy init
   template: src=gitlab.j2 dest=/etc/init.d/gitlab mode=0755
@@ -58,10 +55,13 @@
   notify: restart gitlab
 
 - name: setup logrotate
-  template: src=gitlab.logrotate.j2 dest=/etc/init.d/gitlab
+  template: src=gitlab.logrotate.j2 dest=/etc/logrotate.d/gitlab
 
 - name: bundle check install
-  shell: /usr/bin/yes "yes" | bundle exec rake gitlab:env:info RAILS_ENV=production chdir={{ gitlab_path }}
+  shell: sudo -u {{ gitlab_user }} -H bundle exec rake gitlab:env:info RAILS_ENV=production chdir={{ gitlab_path }}
+
+- name: set permissions
+  file: path={{ gitlab_path }} owner={{ gitlab_user }} group={{ gitlab_user }} recurse=yes
 
 - name: compile assets
-  shell: /usr/bin/yes "yes" | bundle exec rake assets:precompile RAILS_ENV=production chdir={{ gitlab_path }}
+  shell: sudo -u {{ gitlab_user }} -H bundle exec rake assets:precompile RAILS_ENV=production chdir={{ gitlab_path }}
