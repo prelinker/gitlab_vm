@@ -1,29 +1,29 @@
 ---
-gitlab_ci_user: git
-gitlab_ci_user_name: GitLab
-gitlab_ci_user_email: gitlab@localhost
-gitlab_ci_db_user: gitlab
-gitlab_ci_db_password: gitlab
-gitlab_ci_db_host: 127.0.0.1
+gitlab_user: git
+gitlab_user_name: GitLab
+gitlab_user_email: gitlab@localhost
+gitlab_db_user: gitlab
+gitlab_db_password: gitlab
+gitlab_db_host: 127.0.0.1
 
 
 gitlab_shell_repository: https://gitlab.com/gitlab-org/gitlab-shell.git
 gitlab_shell_version: "v1.8.0"
-gitlab_shell_path: "/home/{{ gitlab_ci_user }}/gitlab-shell"
+gitlab_shell_path: "/home/{{ gitlab_user }}/gitlab-shell"
 
-gitlab_satellites_path: "/home/{{ gitlab_ci_user }}/gitlab-satellites"
+gitlab_satellites_path: "/home/{{ gitlab_user }}/gitlab-satellites"
 
 gitlab_repository: https://gitlab.com/gitlab-org/gitlab-ce.git
 gitlab_version: "6-5-stable"
-gitlab_path: "/home/{{ gitlab_ci_user }}/gitlab"
+gitlab_path: "/home/{{ gitlab_user }}/gitlab"
 gitlab_host: "{{ inventory_hostname }}"
 gitlab_port: 80
 gitlab_url: "http://{{ gitlab_host }}/"
-gitlab_auth_file: "/home/{{ gitlab_ci_user }}/.ssh/authorized_keys"
-gitlab_repositories_path: "/home/{{ gitlab_ci_user }}/repositories"
+gitlab_auth_file: "/home/{{ gitlab_user }}/.ssh/authorized_keys"
+gitlab_repositories_path: "/home/{{ gitlab_user }}/repositories"
 
 gitlab_ci_repository: https://gitlab.com/gitlab-org/gitlab-ci.git
 gitlab_ci_version: "4-1-stable"
-gitlab_ci_path: "/home/{{ gitlab_ci_user }}/gitlab_ci"
+gitlab_ci_path: "/home/{{ gitlab_user }}/gitlab_ci"
 gitlab_ci_host: "{{ inventory_hostname }}"
 gitlab_ci_port: 81

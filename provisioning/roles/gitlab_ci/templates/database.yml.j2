@@ -7,9 +7,9 @@ production:
   reconnect: false
   database: gitlab_ci_production
   pool: 5
-  username: {{ gitlab_ci_db_user }}
-  password: {{ gitlab_ci_db_password }}
-  host: {{ gitlab_ci_db_host }}
+  username: {{ gitlab_db_user }}
+  password: {{ gitlab_db_password }}
+  host: {{ gitlab_db_host }}
   # socket: /tmp/mysql.sock
 
 #
@@ -21,9 +21,9 @@ development:
   reconnect: false
   database: gitlab_ci_development
   pool: 5
-  username: {{ gitlab_ci_db_user }}
-  password: {{ gitlab_ci_db_password }}
-  host: {{ gitlab_ci_db_host }}
+  username: {{ gitlab_db_user }}
+  password: {{ gitlab_db_password }}
+  host: {{ gitlab_db_host }}
   # socket: /tmp/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
@@ -35,7 +35,7 @@ test: &test
   reconnect: false
   database: gitlab_ci_test
   pool: 5
-  username: {{ gitlab_ci_db_user }}
-  password: {{ gitlab_ci_db_password }}
-  host: {{ gitlab_ci_db_host }}
+  username: {{ gitlab_db_user }}
+  password: {{ gitlab_db_password }}
+  host: {{ gitlab_db_host }}
   # socket: /tmp/mysql.sock
