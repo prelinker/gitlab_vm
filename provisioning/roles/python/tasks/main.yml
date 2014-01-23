@@ -1,5 +1,5 @@
 ---
-- name: install redis packages
+- name: install python packages
   apt: pkg={{ item }} state=latest
   with_items:
-    - redis-server
+    - python

@@ -64,6 +64,11 @@ http {
 	#passenger_root /usr;
 	#passenger_ruby /usr/bin/ruby;
     
+    upstream gitlab {
+      server unix:{{ gitlab_path }}/tmp/sockets/gitlab.socket;
+    }
+    
+    
     upstream gitlab_ci {
       server unix:{{ gitlab_ci_path }}/tmp/sockets/gitlab-ci.socket;
     }

@@ -6,13 +6,13 @@ defaults: &defaults
   ## Gitlab CI settings
   gitlab_ci:
     ## Web server settings
-    host: localhost
-    port: 80
+    host: {{ gitlab_ci_host }}
+    port:{{ gitlab_ci_port }}
     https: false
 
     ## Email settings
     # Email address used in the "From" field in mails sent by GitLab-CI
-    email_from: gitlab-ci@localhost
+    email_from: {{ gitlab_ci_user_email }}
   
     # Email address of your support contact (default: same as email_from)
     support_email: support@localhost

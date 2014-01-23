@@ -1,0 +1,67 @@
+---
+- name: create gitlab user
+  user: name={{ gitlab_ci_user }} comment="GitLab User" state=present
+
+- name: add gitlab database
+  mysql_db: name=gitlabhq_production state=present encoding=utf8 collation=utf8_unicode_ci
+  
+- name: add gitlab mysql user
+  mysql_user: name={{ gitlab_ci_db_user }} host={{ gitlab_ci_db_host }} password={{ gitlab_ci_db_password }} priv=gitlabhq_production.*:ALL state=present
+  
+- name: checkout gitlab
+  git: repo={{ gitlab_repository }} dest={{ gitlab_path }} version={{ gitlab_version }}
+
+- name: copy gitlab conf
+  template: src=gitlab.yml.j2 dest={{ gitlab_path }}/config/gitlab.yml
+
+- name: create folders
+  file: path={{ item }} owner={{ gitlab_ci_user }} state=directory mode=0755
+  with_items:
+    - "{{ gitlab_path }}/log/"
+    - "{{ gitlab_path }}/tmp/"
+    - "{{ gitlab_path }}/tmp/pids/"
+    - "{{ gitlab_path }}/tmp/sockets/"
+    - "{{ gitlab_path }}/public/uploads/"
+    - "{{ gitlab_satellites_path }}"
+
+- name: copy unicorn conf
+  template: src=unicorn.rb.j2 dest={{ gitlab_path }}/config/unicorn.rb
+
+- name: copy rack attack conf
+  template: src=rack_attack.rb.j2 dest={{ gitlab_path }}/config/initializers/rack_attack.rb
+
+- name: copy .gitconfig file
+  template: src=gitconfig.j2 dest=/home/{{ gitlab_ci_user }}/.gitconfig owner={{ gitlab_ci_user }}
+
+- name: copy database conf
+  template: src=database.yml.j2 dest={{ gitlab_path }}/config/database.yml
+
+- name: ensure bundler is installed
+  command: gem install bundler
+
+- name: bundle install gitlab gems
+  command: bundle install --deployment --without development test postgres aws chdir={{ gitlab_path }}
+
+- name: setup gitlab ci tables
+  shell: /usr/bin/yes "yes" | bundle exec rake gitlab:setup RAILS_ENV=production chdir={{ gitlab_path }}
+
+- name: set permissions
+  file: path={{ gitlab_path }} owner={{ gitlab_ci_user }} group={{ gitlab_ci_user }} recurse=yes
+
+- name: copy init
+  template: src=gitlab.j2 dest=/etc/init.d/gitlab mode=0755
+  
+- name: start gitlab on boot
+  action: command {{ item }} chdir=/etc/init.d/
+  with_items:
+    - update-rc.d gitlab defaults 21
+  notify: restart gitlab
+
+- name: setup logrotate
+  template: src=gitlab.logrotate.j2 dest=/etc/init.d/gitlab
+
+- name: bundle check install
+  shell: /usr/bin/yes "yes" | bundle exec rake gitlab:env:info RAILS_ENV=production chdir={{ gitlab_path }}
+
+- name: compile assets
+  shell: /usr/bin/yes "yes" | bundle exec rake assets:precompile RAILS_ENV=production chdir={{ gitlab_path }}

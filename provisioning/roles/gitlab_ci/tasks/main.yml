@@ -26,11 +26,11 @@
 - name: create pids folder
   file: path={{ gitlab_ci_path }}/tmp/pids/ owner={{ gitlab_ci_user }} state=directory mode=0700
   
-- name: install bundler
-  gem: name=bundler state=latest
+- name: ensure bundler is installed
+  command: gem install bundler
 
 - name: bundle install gitlab ci gems
-  command: bundle install --without development testostgres --deployment chdir={{ gitlab_ci_path }}
+  command: bundle install --without development test postgres --deployment chdir={{ gitlab_ci_path }}
 
 - name: setup gitlab ci tables
   shell: /usr/bin/yes "yes" | bundle exec rake db:setup RAILS_ENV=production chdir={{ gitlab_ci_path }}

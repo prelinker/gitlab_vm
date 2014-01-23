@@ -5,10 +5,7 @@
 - name: upgrade the distro
   apt: upgrade=yes
 
-- name: fix for postfix
-  shell: hostname debian-7
-
-- name: install packages
+- name: install common packages
   apt: pkg={{ item }} state=latest
   with_items:
     - vim
@@ -17,6 +14,7 @@
     - rsync
     - wget
     - gcc
+    - ack-grep
     - checkinstall
     - libxml2-dev
     - libxslt1-dev
@@ -25,11 +23,16 @@
     - libc6-dev
     - libssl-dev
     - libmysql++-dev
+    - libpq-dev
+    - libicu-dev
+    - libyaml-dev
+    - libgdbm-dev
+    - libncurses5-dev
+    - libffi-dev
+    - logrotate
     - make
     - build-essential
     - zlib1g-dev
     - openssh-server
     - libyaml-dev
     - postfix
-    - libpq-dev
-    - libicu-dev

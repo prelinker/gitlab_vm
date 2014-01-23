@@ -3,7 +3,7 @@
 # App Version: 2.0
 
 server {
-  listen 80 default_server;         # e.g., listen 192.168.1.1:80;
+  listen {{ gitlab_ci_port }} default_server;
   server_name _;
   root {{ gitlab_ci_path }}/public;
 

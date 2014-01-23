@@ -1,0 +1,12 @@
+---
+- name: create gitlab user
+  user: name={{ gitlab_ci_user }} comment="GitLab User" state=present
+
+- name: checkout gitlab shell
+  git: repo={{ gitlab_shell_repository }} dest={{ gitlab_shell_path }} version={{ gitlab_shell_version }}
+
+- name: copy gitlab shell conf
+  template: src=config.yml.j2 dest={{ gitlab_shell_path }}/config.yml
+
+- name: install gitlab-shell
+  shell: ./bin/install chdir={{ gitlab_shell_path }} creates={{ gitlab_repositories_path }}

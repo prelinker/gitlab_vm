@@ -1,9 +1,0 @@
----
-gitlab_ci_user: git
-gitlab_ci_repository: https://gitlab.com/gitlab-org/gitlab-ci.git
-gitlab_ci_version: "4-1-stable"
-gitlab_ci_path: "/home/{{ gitlab_ci_user }}/gitlab_ci"
-gitlab_ci_host: "{{ inventory_hostname }}"
-gitlab_ci_db_user: gitlab
-gitlab_ci_db_password: gitlab
-gitlab_ci_db_host: 127.0.0.1

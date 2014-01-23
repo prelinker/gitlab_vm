@@ -1,5 +1,5 @@
 ---
-- name: install packages
+- name: install nginx packages
   apt: pkg={{ item }} state=latest
   with_items:
     - nginx
@@ -12,8 +12,16 @@
   template: src=default.j2 dest=/etc/nginx/sites-available/default
   notify: reload nginx
 
+- name: copy nginx gitlab site
+  template: src=gitlab.conf.j2 dest=/etc/nginx/sites-available/gitlab.conf
+  notify: reload nginx
+
 - name: copy nginx gitlab_ci site
   template: src=gitlab_ci.conf.j2 dest=/etc/nginx/sites-available/gitlab_ci.conf
+  notify: reload nginx
+
+- name: enable nginx gitlab site
+  file: src=/etc/nginx/sites-available/gitlab.conf dest=/etc/nginx/sites-enabled/gitlab.conf state=link
   notify: reload nginx
 
 - name: enable nginx gitlab_ci site

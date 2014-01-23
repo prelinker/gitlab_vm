@@ -6,9 +6,11 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "wheezy"
-  config.vm.box_url = "https://dl.dropboxusercontent.com/u/197673519/debian-7.2.0.box"
+  config.vm.box = "debian-7.3.0-amd64"
+  config.vm.box_url = "https://dl.dropboxusercontent.com/s/u0uyn1cxgzyui9f/debian-7.3.0-amd64.box"
+
   config.vm.network :forwarded_port, guest: 80, host: 8080
+  config.vm.network :forwarded_port, guest: 81, host: 8181
   config.vm.network :private_network, ip: "192.168.111.222"
 
   config.vm.provider :virtualbox do |vb|
