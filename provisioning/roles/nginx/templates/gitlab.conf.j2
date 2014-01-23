@@ -3,7 +3,7 @@
 # App Version: 5.0
 
 server {
-  listen *:{{ gitlab_port }} default_server;
+  listen {{ gitlab_port }} default_server;
   server_name _;     # e.g., server_name source.example.com;
   server_tokens off;     # don't show the version number, a security best practice
   root {{ gitlab_ci_path }}/public;
