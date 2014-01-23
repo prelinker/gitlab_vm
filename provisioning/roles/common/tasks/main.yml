@@ -1,9 +1,6 @@
 ---
-- name: update apt cache
-  apt: update_cache=yes cache_valid_time=3600
-
 - name: upgrade the distro
-  apt: upgrade=yes
+  apt: update_cache=yes upgrade=yes cache_valid_time=3600
 
 - name: install common packages
   apt: pkg={{ item }} state=latest
