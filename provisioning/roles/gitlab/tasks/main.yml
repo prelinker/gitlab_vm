@@ -41,7 +41,7 @@
 - name: copy database conf
   template: src=database.yml.j2 dest={{ gitlab_path }}/config/database.yml owner={{ gitlab_user }}
 
-- name: bundle install gitlab gems
+- name: bundle install gitlab gems (may take a lot of time)
   command: bundle install --deployment --without development test postgres aws force=yes chdir={{ gitlab_path }}
 
 - name: setup gitlab tables
@@ -62,7 +62,7 @@
 - name: bundle check install
   shell: bundle exec rake gitlab:env:info RAILS_ENV=production force=yes chdir={{ gitlab_path }}
 
-- name: compile assets
+- name: compile assets (may take a lot of time)
   shell: bundle exec rake assets:precompile RAILS_ENV=production force=yes chdir={{ gitlab_path }}
 
 - name: set permissions

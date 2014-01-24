@@ -23,6 +23,12 @@
 - name: copy database conf
   template: src=database.yml.j2 dest={{ gitlab_ci_path }}/config/database.yml owner={{ gitlab_user }}
 
+- name: copy smtp settings
+  template: src=smtp_settings.rb.j2 dest={{ gitlab_ci_path }}/config/initializers/smtp_settings.rb owner={{ gitlab_user }}
+  
+- name: copy resque conf
+  template: src=resque.yml.j2 dest={{ gitlab_ci_path }}/config/resque.yml owner={{ gitlab_user }}
+
 - name: create folders
   file: path={{ item }} owner={{ gitlab_user }} state=directory mode=0755
   with_items:
@@ -30,7 +36,7 @@
     - "{{ gitlab_ci_path }}/tmp/sockets/"
     - "{{ gitlab_ci_path }}/tmp/cache/"
 
-- name: bundle install gitlab ci gems
+- name: bundle install gitlab ci gems (may take a lot of time)
   command: bundle install --without development test postgres --deployment chdir={{ gitlab_ci_path }}
 
 - name: setup gitlab ci tables
