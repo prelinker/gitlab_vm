@@ -4,7 +4,7 @@ gitlab_user_name: GitLab
 gitlab_user_email: gitlab@localhost
 gitlab_db_user: gitlab
 gitlab_db_password: gitlab
-gitlab_db_host: 127.0.0.1
+gitlab_db_host: localhost
 
 
 gitlab_shell_repository: https://gitlab.com/gitlab-org/gitlab-shell.git

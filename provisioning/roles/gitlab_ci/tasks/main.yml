@@ -11,32 +11,33 @@
 - name: checkout gitlab ci
   git: repo={{ gitlab_ci_repository }} dest={{ gitlab_ci_path }} version={{ gitlab_ci_version }}
 
+- name: set permissions
+  file: path={{ gitlab_ci_path }} owner={{ gitlab_user }} group={{ gitlab_user }} recurse=yes
+
 - name: copy application conf
-  template: src=application.yml.j2 dest={{ gitlab_ci_path }}/config/application.yml
+  template: src=application.yml.j2 dest={{ gitlab_ci_path }}/config/application.yml owner={{ gitlab_user }}
 
 - name: copy puma
-  template: src=puma.rb.j2 dest={{ gitlab_ci_path }}/config/puma.rb
+  template: src=puma.rb.j2 dest={{ gitlab_ci_path }}/config/puma.rb owner={{ gitlab_user }}
 
 - name: copy database conf
-  template: src=database.yml.j2 dest={{ gitlab_ci_path }}/config/database.yml
+  template: src=database.yml.j2 dest={{ gitlab_ci_path }}/config/database.yml owner={{ gitlab_user }}
 
 - name: create folders
   file: path={{ item }} owner={{ gitlab_user }} state=directory mode=0755
   with_items:
     - "{{ gitlab_ci_path }}/tmp/pids/"
     - "{{ gitlab_ci_path }}/tmp/sockets/"
-  
-- name: ensure bundler is installed
-  command: gem install bundler
+    - "{{ gitlab_ci_path }}/tmp/cache/"
 
 - name: bundle install gitlab ci gems
   command: bundle install --without development test postgres --deployment chdir={{ gitlab_ci_path }}
 
 - name: setup gitlab ci tables
-  shell: sudo -u {{ gitlab_user }} -H bundle exec rake db:setup RAILS_ENV=production chdir={{ gitlab_ci_path }}
+  shell: sudo -u {{ gitlab_user }} bundle exec rake db:setup RAILS_ENV=production force=yes chdir={{ gitlab_ci_path }}
 
 - name: setup gitlab ci schedules
-  shell: sudo -u {{ gitlab_user }} -H bundle exec whenever -w RAILS_ENV=production chdir={{ gitlab_ci_path }}
+  shell: sudo -u {{ gitlab_user }} bundle exec whenever -w RAILS_ENV=production force=yes chdir={{ gitlab_ci_path }}
 
 - name: set permissions
   file: path={{ gitlab_ci_path }} owner={{ gitlab_user }} group={{ gitlab_user }} recurse=yes

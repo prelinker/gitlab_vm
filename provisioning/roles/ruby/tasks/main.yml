@@ -15,4 +15,4 @@
     - rm -rf ../ruby-{{ ruby_version }}
 
 - name: install bundler
-  gem: name=bundler state=present
+  command: gem install bundler

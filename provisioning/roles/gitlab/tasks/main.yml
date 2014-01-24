@@ -11,8 +11,11 @@
 - name: checkout gitlab
   git: repo={{ gitlab_repository }} dest={{ gitlab_path }} version={{ gitlab_version }}
 
+- name: set permissions
+  file: path={{ gitlab_path }} owner={{ gitlab_user }} group={{ gitlab_user }} recurse=yes
+
 - name: copy gitlab conf
-  template: src=gitlab.yml.j2 dest={{ gitlab_path }}/config/gitlab.yml
+  template: src=gitlab.yml.j2 dest={{ gitlab_path }}/config/gitlab.yml owner={{ gitlab_user }}
 
 - name: create folders
   file: path={{ item }} owner={{ gitlab_user }} state=directory mode=0755
@@ -25,25 +28,22 @@
     - "{{ gitlab_satellites_path }}"
 
 - name: copy unicorn conf
-  template: src=unicorn.rb.j2 dest={{ gitlab_path }}/config/unicorn.rb
+  template: src=unicorn.rb.j2 dest={{ gitlab_path }}/config/unicorn.rb owner={{ gitlab_user }}
 
 - name: copy rack attack conf
-  template: src=rack_attack.rb.j2 dest={{ gitlab_path }}/config/initializers/rack_attack.rb
+  template: src=rack_attack.rb.j2 dest={{ gitlab_path }}/config/initializers/rack_attack.rb owner={{ gitlab_user }}
 
 - name: copy .gitconfig file
   template: src=gitconfig.j2 dest=/home/{{ gitlab_user }}/.gitconfig owner={{ gitlab_user }}
 
 - name: copy database conf
-  template: src=database.yml.j2 dest={{ gitlab_path }}/config/database.yml
-
-- name: ensure bundler is installed
-  command: gem install bundler
+  template: src=database.yml.j2 dest={{ gitlab_path }}/config/database.yml owner={{ gitlab_user }}
 
 - name: bundle install gitlab gems
-  shell: sudo -u {{ gitlab_user }} -H bundle install --deployment --without development test postgres aws chdir={{ gitlab_path }}
+  command: bundle install --deployment --without development test postgres aws force=yes chdir={{ gitlab_path }}
 
 - name: setup gitlab tables
-  shell: sudo -u {{ gitlab_user }} -H bundle exec rake gitlab:setup RAILS_ENV=production chdir={{ gitlab_path }}
+  shell: bundle exec rake gitlab:setup RAILS_ENV=production force=yes chdir={{ gitlab_path }}
 
 - name: copy init
   template: src=gitlab.j2 dest=/etc/init.d/gitlab mode=0755
@@ -58,10 +58,10 @@
   template: src=gitlab.logrotate.j2 dest=/etc/logrotate.d/gitlab
 
 - name: bundle check install
-  shell: sudo -u {{ gitlab_user }} -H bundle exec rake gitlab:env:info RAILS_ENV=production chdir={{ gitlab_path }}
+  shell: bundle exec rake gitlab:env:info RAILS_ENV=production force=yes chdir={{ gitlab_path }}
+
+- name: compile assets
+  shell: bundle exec rake assets:precompile RAILS_ENV=production force=yes chdir={{ gitlab_path }}
 
 - name: set permissions
   file: path={{ gitlab_path }} owner={{ gitlab_user }} group={{ gitlab_user }} recurse=yes
-
-- name: compile assets
-  shell: sudo -u {{ gitlab_user }} -H bundle exec rake assets:precompile RAILS_ENV=production chdir={{ gitlab_path }}
