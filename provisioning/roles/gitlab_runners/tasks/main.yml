@@ -18,11 +18,15 @@
     - "{{ gitlab_path }}/tmp/"
     - "{{ gitlab_path }}/tmp/pids/"
 
-- name: bundle install gitlab runners
-  command: bundle install force=yes chdir={{ gitlab_ci_runners_path }}
+- name: bundle install gitlab runners (may take a lot of time)
+  command: bundle install chdir={{ gitlab_ci_runners_path }}
 
+# - name: bundle exec
+#   command: CI_SERVER_URL={{ gitlab_ci_url }} REGISTRATION_TOKEN=replaceme bundle exec bin/setup chdir={{ gitlab_ci_runners_path }}
 - name: bundle exec
-  command: CI_SERVER_URL={{ gitlab_ci_url }} REGISTRATION_TOKEN=replaceme bundle exec ./bin/setup
+  action: command {{ item }} chdir={{ gitlab_ci_runners_path }}
+  with_items:
+  - bundle exec bin/setup CI_SERVER_URL={{ gitlab_ci_url }} REGISTRATION_TOKEN=replaceme
 
 - name: copy init
   template: src=gitlab_ci_runner.j2 dest=/etc/init.d/gitlab-ci-runner mode=0755

@@ -1,10 +1,18 @@
 ---
+- name: check ruby version
+  shell: ruby -v
+  register: current_ruby_version
+  ignore_errors: True
+
+- debug: msg="Ruby {{ current_ruby_version.rc }}"
+
 - name: download ruby {{ ruby_version }} archive
   action: command {{ item }} chdir=/tmp/
   with_items:
     - wget {{ ruby_archive }}
     - tar xf ruby-{{ ruby_version }}.tar.bz2
     - rm ruby-{{ ruby_version }}.tar.bz2
+  when: current_ruby_version|failed or not current_ruby_version.stdout.find('{{ ruby_version }}')
 
 - name: install ruby {{ ruby_version }}
   action: command {{ item }} chdir=/tmp/ruby-{{ ruby_version }}
@@ -13,6 +21,7 @@
     - make
     - make install
     - rm -rf ../ruby-{{ ruby_version }}
+  when: current_ruby_version|failed or not current_ruby_version.stdout.find('{{ ruby_version }}')
 
 - name: install bundler
   command: gem install bundler

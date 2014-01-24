@@ -1,11 +1,14 @@
 ---
+ruby_version: "2.0.0-p353"
+ruby_archive: http://cache.ruby-lang.org/pub/ruby/2.0/ruby-{{ ruby_version }}.tar.bz2
+configure_options: --disable-install-rdoc
+
 gitlab_user: git
 gitlab_user_name: GitLab
 gitlab_user_email: gitlab@localhost
 gitlab_db_user: gitlab
 gitlab_db_password: gitlab
 gitlab_db_host: localhost
-
 
 gitlab_shell_repository: https://gitlab.com/gitlab-org/gitlab-shell.git
 gitlab_shell_version: "v1.8.0"

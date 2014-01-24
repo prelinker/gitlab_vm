@@ -6,8 +6,12 @@
   mysql_db: name=gitlab_ci_production state=present encoding=utf8 collation=utf8_unicode_ci
   
 - name: add gitlab ci mysql user
-  mysql_user: name={{ gitlab_db_user }} host={{ gitlab_db_host }} password={{ gitlab_db_password }} priv=gitlab_ci_production.*:ALL state=present
-  
+  mysql_user: name={{ gitlab_db_user }} host={{ item }} password={{ gitlab_db_password }} priv=gitlab_ci_production.*:ALL state=present append_privs=yes
+  with_items:
+  - "{{ gitlab_db_host }}"
+  - localhost
+  - 127.0.0.1
+
 - name: checkout gitlab ci
   git: repo={{ gitlab_ci_repository }} dest={{ gitlab_ci_path }} version={{ gitlab_ci_version }}
 

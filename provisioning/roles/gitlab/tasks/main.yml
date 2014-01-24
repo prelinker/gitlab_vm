@@ -6,7 +6,11 @@
   mysql_db: name=gitlabhq_production state=present encoding=utf8 collation=utf8_unicode_ci
   
 - name: add gitlab mysql user
-  mysql_user: name={{ gitlab_db_user }} host={{ gitlab_db_host }} password={{ gitlab_db_password }} priv=gitlabhq_production.*:ALL state=present
+  mysql_user: name={{ gitlab_db_user }} host={{ item }} password={{ gitlab_db_password }} priv=gitlabhq_production.*:ALL state=present append_privs=yes
+  with_items:
+  - "{{ gitlab_db_host }}"
+  - localhost
+  - 127.0.0.1
   
 - name: checkout gitlab
   git: repo={{ gitlab_repository }} dest={{ gitlab_path }} version={{ gitlab_version }}
@@ -66,4 +70,4 @@
   shell: bundle exec rake assets:precompile RAILS_ENV=production force=yes chdir={{ gitlab_path }}
 
 - name: set permissions
-  file: path={{ gitlab_path }} owner={{ gitlab_user }} group={{ gitlab_user }} recurse=yes
+  file: path=/home/{{ gitlab_user }}/ owner={{ gitlab_user }} group={{ gitlab_user }} recurse=yes
