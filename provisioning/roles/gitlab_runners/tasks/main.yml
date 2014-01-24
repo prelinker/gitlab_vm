@@ -1,0 +1,34 @@
+---
+# - name: create gitlab runners user
+#   user: name={{ gitlab_user }} comment="GitLab User" state=present
+
+- name: create folders
+  file: path={{ item }} owner={{ gitlab_ci_runners_user }} state=directory mode=0755
+  with_items:
+    - "{{ gitlab_ci_runners_path }}"
+
+
+- name: checkout gitlab runners
+  git: repo={{ gitlab_ci_runners_repository }} dest={{ gitlab_ci_runners_path }}
+
+- name: create folders
+  file: path={{ item }} owner={{ gitlab_ci_runners_user }} state=directory mode=0755
+  with_items:
+    - "{{ gitlab_path }}/log/"
+    - "{{ gitlab_path }}/tmp/"
+    - "{{ gitlab_path }}/tmp/pids/"
+
+- name: bundle install gitlab runners
+  command: bundle install force=yes chdir={{ gitlab_ci_runners_path }}
+
+- name: bundle exec
+  command: CI_SERVER_URL={{ gitlab_ci_url }} REGISTRATION_TOKEN=replaceme bundle exec ./bin/setup
+
+- name: copy init
+  template: src=gitlab_ci_runner.j2 dest=/etc/init.d/gitlab-ci-runner mode=0755
+  
+- name: start gitlab-ci-runner on boot
+  action: command {{ item }} chdir=/etc/init.d/
+  with_items:
+    - update-rc.d gitlab-ci-runner defaults 21
+  notify: restart gitlab-ci-runner

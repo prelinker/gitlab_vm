@@ -1,0 +1,3 @@
+---
+- name: restart gitlab-ci-runner
+  action: service name=gitlab-ci-runner state=restarted enabled=yes
