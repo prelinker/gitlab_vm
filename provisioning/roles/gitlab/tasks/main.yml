@@ -26,6 +26,7 @@
     - "{{ gitlab_path }}/tmp/sockets/"
     - "{{ gitlab_path }}/public/uploads/"
     - "{{ gitlab_satellites_path }}"
+    - "{{ gitlab_repositories_path }}"
 
 - name: copy unicorn conf
   template: src=unicorn.rb.j2 dest={{ gitlab_path }}/config/unicorn.rb owner={{ gitlab_user }}
