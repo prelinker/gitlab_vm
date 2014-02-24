@@ -25,3 +25,6 @@
 
 - name: install bundler
   command: gem install bundler
+
+- name: install rugged
+  command: gem install rugged
